@@ -61,8 +61,8 @@ function get_ids($approved, $zip='ANY',$type='ANY')
 	return $ids;
 }
 
-#View listing by ID
-#PARAMS
+# View listing by ID
+# PARAMS
 #	id: id as retrieved from get_ids()
 function get_listing($id)
 {
@@ -81,8 +81,8 @@ function get_listing($id)
 	return $listings;
 }
 
-#Insert listing into oracle database
-#Params
+# Insert listing into oracle database
+# Params
 #	ID: id given by system
 #	name: Name of business
 #	description: Description of business
@@ -140,4 +140,21 @@ function delete_listing($id)
 	return $res;
 }
 
+# Function for admin to approve listings
+# PARAMS
+#	id: id of listing to be approved
+# RETURN
+#	res: success code on approval of listing
+function approve_listing($id)
+{
+	$conn=get_conn();
 
+	$query = oci_parse($conn, 'UPDATE listings SET approved=1 WHERE ID=:id');
+	oci_bind_by_name($query, ':id', $id);
+	$res = oci_execute($query);
+
+	oci_free_statement($query);
+	oci_close($conn);
+
+	return $res;
+}
