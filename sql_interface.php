@@ -120,3 +120,24 @@ function insert_listing($ID, $name, $description, $type, $address, $country, $st
 
 	return $res;
 }
+
+# Function for admin to delete listing by ID
+# PARAMS
+#	id: id of listing to be deleted
+# RETURN
+#	res: success code on deletion of row
+function delete_listing($id)
+{
+	$conn=get_conn();
+	
+	$query = oci_parse($conn, "DELETE FROM listings WHERE ID=:id");
+	oci_bind_by_name($query, ':id', $id);
+	$res = oci_execute($query);
+
+	oci_free_statement($query);
+	oci_close($conn);
+
+	return $res;
+}
+
+
