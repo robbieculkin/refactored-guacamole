@@ -22,10 +22,34 @@ function get_ids($approved, $zip='ANY',$type='ANY')
 {
 	$conn=get_conn();
 	
-	$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved AND zip=:zip AND type=:type');
+	if($zip == 'ANY')
+	{
+		if($type == 'ANY')
+		{
+			$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved');
+		}
+		else
+		{
+			$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved AND type=:type');
+			oci_bind_by_name($query, ':type', $type);
+		}
+	}
+	else
+	{
+		if($type == 'ANY')
+		{
+			$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved AND zip=:zip');
+			oci_bind_by_name($query, ':zip', $zip);
+		}
+		else
+		{
+			$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved AND type=:type AND zip=:zip');	
+			oci_bind_by_name($query, ':zip', $zip);
+			oci_bind_by_name($query, ':type', $type);
+		}
+	}
+
 	oci_bind_by_name($query, ':approved', $approved);
-	oci_bind_by_name($query, ':zip', $zip);
-	oci_bind_by_name($query, ':type', $type);
 	oci_execute($query);
 	
 	$oci_val = OCI_BOTH;
