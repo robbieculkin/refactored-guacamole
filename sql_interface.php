@@ -35,22 +35,24 @@ function get_ids($approved)
 	return $ids;
 }
 
-#View all listings
+#View listing by ID
 #PARAMS
 #	id: id as retrieved from get_ids()
 function get_listing($id)
 {
 	$conn=get_conn();
 	
-	$query = oci_parse($conn, "SELECT * FROM listings WHERE approved=1");
+	$query = oci_parse($conn, "SELECT * FROM listings WHERE ID=:id");
+	oci_bind_by_name($query, ':id', $id);
 	oci_execute($query);
 
-	$nrows = oci_fetch_array($query, OCI_RETURN_NULLS+OCI_ASSOC);
+	$listings = NULL;
+	$nrows = oci_fetch_all($query, $listings);
 
 	oci_free_statement($query);
 	oci_close($conn);
 
-	return $results;
+	return $listings;
 }
 
 
