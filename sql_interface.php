@@ -18,12 +18,14 @@ function get_conn()
 # 	approved: 1 for approved listings, 0 for unapproved listings
 
 # TODO exception checking
-function get_ids($approved)
+function get_ids($approved, $zip='ANY',$type='ANY')
 {
 	$conn=get_conn();
 	
-	$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved');
+	$query = oci_parse($conn, 'SELECT ID FROM listings WHERE approved=:approved AND zip=:zip AND type=:type');
 	oci_bind_by_name($query, ':approved', $approved);
+	oci_bind_by_name($query, ':zip', $zip);
+	oci_bind_by_name($query, ':type', $type);
 	oci_execute($query);
 	
 	$oci_val = OCI_BOTH;
@@ -35,25 +37,20 @@ function get_ids($approved)
 	return $ids;
 }
 
-#View listing by ID
+#View all listings
 #PARAMS
 #	id: id as retrieved from get_ids()
 function get_listing($id)
 {
 	$conn=get_conn();
 	
-	$query = oci_parse($conn, "SELECT * FROM listings WHERE ID=:id");
-	oci_bind_by_name($query, ':id', $id);
+	$query = oci_parse($conn, "SELECT * FROM listings WHERE approved=1");
 	oci_execute($query);
 
-	$listings = NULL;
-	$nrows = oci_fetch_all($query, $listings);
+	$nrows = oci_fetch_array($query, OCI_RETURN_NULLS+OCI_ASSOC);
 
 	oci_free_statement($query);
 	oci_close($conn);
 
-	return $listings;
+	return $results;
 }
-
-
-?>
