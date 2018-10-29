@@ -120,5 +120,3 @@ function insert_listing($ID, $name, $description, $type, $address, $country, $st
 
 	return $res;
 }
-
-
