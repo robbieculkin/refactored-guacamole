@@ -22,7 +22,7 @@
 										  <a class="nav-link" href="new.php">New Submission</a>
 								</li>
 								<li class="nav-item">
-										  <a class="nav-link" href="admin.php">Admin</a>
+										  <a class="nav-link" href="login.php">Admin</a>
 								</li>
 					 </ul>
 		  </nav>
@@ -40,11 +40,11 @@
 					 include 'sql_interface.php';
 
 					 if ($_SERVER["REQUEST_METHOD"]=="POST"){
-					 			if($_POST["name"]=="approve")
-								{
-									approve_listing($_POST["value"]);
-								} else{
-									delete_listing($_POST["value"]);
+								if (isset($_POST['approve'])){
+										  approve_listing((int)$_POST['approve']);
+								}
+								if (isset($_POST['delete'])){
+										  delete_listing((int)$_POST['delete']);
 								}
 					 }
 
@@ -62,8 +62,9 @@
 								echo $listing['STATE'][0].", ";
 								echo $listing['ZIP'][0]."</p>";
 								echo "<form action=".$_SERVER['PHP_SELF']." method=\"post\"";
-								echo '<div class="form-group text-center"><button name="approve" value='.$id.' type="submit" class="btn btn-primary">Approve</button></div>';
-								echo '<div class="form-group text-center"><button name="delete" value='.$id.'type="submit" class="btn btn-primary">Delete</button></div>';
+								echo '<div class="form-group text-center"><button name="approve" value="'.$id.'" type="submit" class="btn btn-primary">Approve</button></div>';
+								echo '<div class="form-group text-center"><button name="delete" value="'.$id.'" type="submit" class="btn btn-primary">Delete</button></div>';
+								echo "</form>";
 								echo "</div>";
 								echo "</div>";
 								echo "<br>";						
