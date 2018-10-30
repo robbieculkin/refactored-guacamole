@@ -12,8 +12,10 @@
 <body>
 		  <?php
 					 include 'sql_interface.php';
-
-					 //insert_listing(id, $_POST["name"], $_POST["description"]...);
+					 if(isset($_POST["submit"]))
+                     {
+					 	insert_listing(new_id(), $_POST["name"], $_POST["description"], $_POST["type"], $_POST["address"], $_POST["country"], $_POST["state"], $_POST["zip"], 0, $_POST["alumName"], $_POST["alumYear"]);
+					 }
 		  ?>
 
 		  <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
@@ -38,15 +40,21 @@
 
 
 		  <!--input form-->
-
-		  <form action="<?php echo $_SERVER[PHP_SELF];?>" method="post">
+		  
+		  <?php 
+		  if(isset($_POST["submit"]))
+          {
+				     echo "<h2 style='color:#3333ff;text-align:center;'> Listing submitted! </h2>";
+		  }
+		  ?>
+		  <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post">
 					 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="busName">Business Name</label>
-								<input name="name" type="text" class="form-control" id="busName">
+								<input name="name" type="text" class="form-control" id="busName" required>
 					 </div>
 					 <div class="form-group w-75 mx-auto">
-								<label class="text-center" for="busDesc">Business Description</label>
-								<input name="description" type="text" class="form-control" id="busDesc">
+								<label claindexss="text-center" for="busDesc">Business Description</label>
+								<input name="description" type="text" class="form-control" id="busDesc" required>
 					 </div>
 					 <!---->
 					 <div class="form-group w-75 mx-auto">
@@ -61,7 +69,7 @@
 					 </div>
 					 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="busAddr">Address</label>
-								<input name="address" type="text" class="form-control" id="busAddr">
+								<input name="address" type="text" class="form-control" id="busAddr" required>
 					 </div>
 					 <div	class="form-group w-75 mx-auto">
 								<label for="busCountry">Country</label>
@@ -82,11 +90,21 @@
 					 <!--if ZIP is empty should return ANY-->
 					 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="busZip">ZIP Code</label>
-								<input name="zip" type="text" class="form-control" id="busZip">
+								<input name="zip" type="text" class="form-control" id="busZip" required>
+					 </div>
+
+                     <div class="form-group w-75 mx-auto">
+								<label class="text-center" for="alumName">Alum Full Name</label>
+								<input name="alumName" type="text" class="form-control" id="alumName" required>
+					 </div>
+					 <div class="form-group w-75 mx-auto">
+								<label class="text-center" for="alumYear">Graduation Year</label>
+								<input name="alumYear" type="text" class="form-control" id="alumYear" required>
 					 </div>
 					 <div class="form-group text-center">
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<button name="submit" type="submit" class="btn btn-primary">Submit</button>
 					 </div>
+
 		  </form>
 
 </body>
