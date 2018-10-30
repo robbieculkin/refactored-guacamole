@@ -5,6 +5,7 @@
  <body>
  <?php 
 	include 'sql_interface.php';
+	
 	$r = insert_listing(9092, "Smart Water Shop", "Good place for water", "Water shop", "1234 water st.", "USA", "CA", "95054", 1, "Glen Chandler", "2019");
 
 	$ids = get_ids(1, '95054', 'ANY');

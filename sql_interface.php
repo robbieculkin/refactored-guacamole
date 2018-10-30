@@ -158,3 +158,23 @@ function approve_listing($id)
 
 	return $res;
 }
+
+# Function to obtain ID for new listing
+# RETURN
+# 	id: new id
+function new_id()
+{
+	$conn=get_conn();	
+	$query = oci_parse($conn, 'SELECT MAX(id) FROM listings');
+	oci_execute($query);
+
+	$max_id = NULL;
+	oci_fetch_all($query, $max_id);
+	
+	oci_free_statement($query);
+	oci_close($conn);
+
+	$max_id = (int)$max_id["MAX(ID)"][0] + 1;
+
+	return $max_id;	
+}
