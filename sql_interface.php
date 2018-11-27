@@ -39,11 +39,11 @@ function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $addre
 
 	if($name != 'ANY')
 	{
-		$query_str = $query_str.' AND name=\''.$name.'\'';
+		$query_str = $query_str.' AND LOWER(name) LIKE \'%'.strtolower($name).'%\'';
 	}	
 	if($description != 'ANY')
 	{
-		$query_str = $query_str.' AND description=\''.$description.'\'';
+		$query_str = $query_str.' AND LOWER(description) LIKE \'%'.strtolower($description).'%\'';
 	}	
 	if($type != 'ANY')
 	{
@@ -51,7 +51,7 @@ function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $addre
 	}
 	if($address != 'ANY')
 	{
-		$query_str = $query_str.' AND address=\''.$address.'\'';
+		$query_str = $query_str.' AND LOWER(address) LIKE \'%'.strtolower($address).'%\'';
 	}
 	if($country != 'ANY')
 	{
@@ -67,7 +67,7 @@ function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $addre
 	}	
 	if($alum_name != 'ANY')
 	{
-		$query_str = $query_str.' AND alum_name=\''.$alum_name.'\'';
+		$query_str = $query_str.' AND LOWER(alum_name) LIKE \'%'.strtolower($alum_name).'%\'';
 	}	
 	if($grad_year != 'ANY')
 	{
@@ -75,7 +75,7 @@ function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $addre
 	}
 	if($major != 'ANY')
 	{
-		$query_str = $query_str.' AND major=\''.$major.'\'';
+		$query_str = $query_str.' AND LOWER(major) LIKE \'%'.strtolower($major).'%\'';
 	}
 	
 	
