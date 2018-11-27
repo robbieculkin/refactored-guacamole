@@ -33,12 +33,18 @@
 
 		  <!--input form-->
 		  <?php
+					#React to form submission
+					
+					#Check if id entered by user is valid
 					 include 'sql_interface.php';
 					 if(isset($_POST["submit"]))
-                     {
+                     			 {
 						$id = new_id();
 						if(isset($_POST["refID"])) {
-							$id = $_POST["refID"];
+							#Check to make sure entered ID is valid
+							if(is_numeric($_POST["refID"]) && count(get_listing($_POST["refID"], 1)["ID"]) != 0 ) {
+								$id = $_POST["refID"];
+							}
 						}
 					 	insert_listing($id, 0, $_POST["name"], $_POST["description"], $_POST["type"], $_POST["address"], $_POST["country"], $_POST["state"], $_POST["zip"], $_POST["alumName"], $_POST["alumYear"], $_POST["major"]);
 						echo "<h2 style='color:#3333ff;text-align:center;'> Listing submitted! Please note your ID: $id </h2>";

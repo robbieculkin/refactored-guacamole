@@ -3,6 +3,8 @@
 # Get connection variable for further connections
 # PARAMS
 #	None
+# RETURN
+#	conn: connection handle for database connection
 function get_conn()
 {
 	$conn=oci_connect('rculkin', '1051271', '//dbserver.engr.scu.edu/db11g');
@@ -25,7 +27,9 @@ function get_conn()
 #	zip 
 #	alum_name 
 #	grad_year 
-#	major 
+#	major
+# RETURN
+#	ids: all ids corresponding to constraints entered as parameters
 function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $address='ANY', $country='ANY', $state='ANY', $zip='ANY', $alum_name='ANY', $grad_year='ANY', $major='ANY')
 {
 	$conn=get_conn();
@@ -93,7 +97,9 @@ function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $addre
 # View listing by ID
 # PARAMS
 #	id: id as retrieved from get_ids()
-#	approved: Boolean indicating table in which to get ID 
+#	approved: Boolean indicating table in which to get ID
+# RETURN
+#	listings: relative listing corresponding to id
 function get_listing($id, $approved)
 {
 	$conn=get_conn();
@@ -133,6 +139,8 @@ function get_listing($id, $approved)
 #	alum_name: Name of alumni that owns business
 #	grad_year: Year alumni graduated
 #	major: major of alumni
+# RETURN
+#	res: success code on deletion of row
 function insert_listing($ID, $approved, $name, $description, $type, $address, $country, $state, $zip, $alum_name, $grad_year, $major)
 {
 	$conn=get_conn();
@@ -216,8 +224,10 @@ function approve_listing($id)
 }
 
 # Function to obtain ID for new listing as max between both tables
+# PARAMS
+#	none
 # RETURN
-# 	id: new id
+# 	max_id: new id
 function new_id()
 {
 	$conn=get_conn();	
@@ -244,6 +254,11 @@ function new_id()
 	return $max_id;	
 }
 
+# Function to get list of user ids
+# PARAMS
+#	None
+# RETURN
+#	ids: List of user ids retrieved from user table
 function get_user_ids()
 {
 	$conn=get_conn();
@@ -258,6 +273,11 @@ function get_user_ids()
 	return $ids;
 }
 
+# Function to get user id 
+# PARAMS
+#	id: User id to retrieve relative row
+# RETURN
+#	user: return actual user entry corresponding to id
 function get_user($id)
 {
 	$conn=get_conn();
@@ -273,6 +293,11 @@ function get_user($id)
 	return $user;
 }
 
+# Function to create new user id
+# PARAMS
+#	none
+# RETURN
+#	id: ID to be used for new entry
 function new_user_id()
 {
 	$conn=get_conn();
@@ -286,6 +311,16 @@ function new_user_id()
 	return (int)$max_id["MAX(ID)"][0] + 1;
 }
 
+# Function to insert new user into user table
+# PARAMS
+#	id: reference id for inserting new user
+#	name: name to be inserted into table
+#	grad_year: grad year to be entered into the table
+#	major: major of user to be entered into the table 
+#	reason: reason for using the website
+#
+# RETURN
+#	id: res result code for inserting user
 function insert_user($id, $name, $grad_year, $major, $reason)
 {
 	$conn=get_conn();
@@ -304,6 +339,11 @@ function insert_user($id, $name, $grad_year, $major, $reason)
 	return $res;
 }
 
+# Function to retrieve relative password
+# PARAMS
+#	none
+# RETURN
+#	pw: stored password
 function get_pw()
 {
 	$conn=get_conn();
