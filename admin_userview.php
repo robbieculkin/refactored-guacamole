@@ -39,7 +39,7 @@ echo "
 		  <!--Content-->
 		  <div class=\"container\">
 					 <div class=\"jumbotron\" style=\"text-align:center\">
-								<h1>Admin Listing Verification</h1>
+								<h1>Admin User Metadata View</h1>
 						<a href=\"admin.php\">Listings</a>
 						<br>
 						<a href=\"admin_userview.php\">User Metadata</a>
@@ -47,37 +47,17 @@ echo "
 		  </div>
 ";
 
-					 //include 'sql_interface.php';
 
-					 if ($_SERVER["REQUEST_METHOD"]=="POST"){
-								if (isset($_POST['approve'])){
-										  approve_listing((int)$_POST['approve']);
-								}
-								if (isset($_POST['delete'])){
-										  delete_listing((int)$_POST['delete'], 0);
-								}
-					 }
-
-					 $ids = get_ids(0);
+					 $ids = get_user_ids();
 					 
 					 foreach($ids['ID'] as $id){
 								echo "<div id=\"busn\" class=\"card w-75 mx-auto\">";
-								$listing = get_listing($id, 0);
+								$user = get_user($id);
 								echo "<div class=\"card-body\">";
-								echo "<h3 class=\"card-title\">".$listing['NAME'][0]."</h3>";
-								echo "<p class=\"card-text\">".$listing['DESCRIPTION'][0]."</p>";
-								echo "<p class=\"card-text\">".$listing['TYPE'][0]."</p>";
-								echo "<p class=\"card-text\">".$listing['ADDRESS'][0].", ";
-								echo $listing['COUNTRY'][0].", ";
-								echo $listing['STATE'][0].", ";
-								echo $listing['ZIP'][0]."</p>";
-								echo "<p class=\"card-text\">".$listing['ALUM_NAME'][0]."</p>";
-								echo "<p class=\"card-text\">".$listing['GRAD_YEAR'][0]."</p>";
-								echo "<p class=\"card-text\">".$listing['MAJOR'][0]."</p>";
-								echo "<form action=".$_SERVER['PHP_SELF']." method=\"post\"";
-								echo '<div class="form-group text-center"><button name="approve" value="'.$id.'" type="submit" class="btn btn-primary">Approve</button></div>';
-								echo '<div class="form-group text-center"><button name="delete" value="'.$id.'" type="submit" class="btn btn-primary">Delete</button></div>';
-								echo "</form>";
+								echo "<h3 class=\"card-title\">".$user['NAME'][0]."</h3>";
+								echo "<p class=\"card-text\">".$user['GRAD_YEAR'][0]."</p>";
+								echo "<p class=\"card-text\">".$user['MAJOR'][0]."</p>";
+								echo "<p class=\"card-text\">".$user['REASON'][0];
 								echo "</div>";
 								echo "</div>";
 								echo "<br>";						
