@@ -1,3 +1,19 @@
+<?php
+		  session_start();
+		  $username = "admin";
+		  $password = "guacamole";
+					 if (isset($_POST['user']) && isset($_POST['pass'])){
+								if (($_POST['user'] == $username) && $_POST['pass'] == $password){
+										  $_SESSION['valid'] = true;
+										  $_SESSION['timeout'] = time();
+										  $_SESSION['username'] = $username;
+										  header("Location:admin.php");
+										  exit;
+								} else{
+										  echo "<div class=\"alert alert-warning w-75 mx-auto\"><strong>Login failed. Please try again.</strong></div>";
+								}
+					 }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,21 +46,7 @@
 					 </div>
 		  </div>
 
-		  <?php
-					 session_start();
-					 $username = "admin";
-					 $password = "guacamole";
-					 if (isset($_POST['user']) && isset($_POST['pass'])){
-								if (($_POST['user'] == $username) && $_POST['pass'] == $password){
-										  $_SESSION['valid'] == true;
-										  $_SESSION['timeout'] == time();
-										  $_SESSION['username'] == $username;
-										  header("Location: admin.php");
-								} else{
-										  echo "<div class=\"alert alert-warning w-75 mx-auto\"><strong>Login failed. Please try again.</strong></div>";
-								}
-					 }
-		  ?>
+<!--session-->
 
 		  <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
 					 <div class="form-group w-25 mx-auto">
