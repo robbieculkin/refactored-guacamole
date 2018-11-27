@@ -304,3 +304,15 @@ function insert_user($id, $name, $grad_year, $major, $reason)
 	return $res;
 }
 
+function get_pw()
+{
+	$conn=get_conn();
+
+	$query = oci_parse($conn, 'SELECT pw FROM password');
+	oci_execute($query);
+	$pw = NULL;
+	oci_fetch_all($query, $pw);
+	oci_free_statement($query);
+
+	return $pw;
+}
