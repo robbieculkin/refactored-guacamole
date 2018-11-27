@@ -13,80 +13,78 @@ function get_conn()
 	return $conn;
 }
 
-# returns all IDs
+# returns IDs where conditions are matched
 # PARAMS
 # 	approved: 1 for approved listings, 0 for unapproved listings
-
-# TODO exception checking
-function get_ids($approved, $zip='ANY',$type='ANY')
+# 	name 
+#	description 
+#	type 
+#	address 
+#	country 
+#	state 
+#	zip 
+#	alum_name 
+#	grad_year 
+#	major 
+function get_ids($approved, $name='ANY', $description='ANY', $type='ANY', $address='ANY', $country='ANY', $state='ANY', $zip='ANY', $alum_name='ANY', $grad_year='ANY', $major='ANY')
 {
 	$conn=get_conn();
-	
-	if((int)$approved == 1)
-	{
-	if($zip == 'ANY')
-	{
-		if($type == 'ANY')
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_approved');
-		}
-		else
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_approved WHERE type=:type');
-			oci_bind_by_name($query, ':type', $type);
-		}
-	}
-	else
-	{
-		if($type == 'ANY')
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_approved WHERE zip=:zip');
-			oci_bind_by_name($query, ':zip', $zip);
-		}
-		else
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_approved WHERE type=:type AND zip=:zip');	
-			oci_bind_by_name($query, ':zip', $zip);
-			oci_bind_by_name($query, ':type', $type);
-		}
-	}
-	}
-	else
-	{
-	if($zip == 'ANY')
-	{
-		if($type == 'ANY')
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_unapproved');
-		}
-		else
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_unapproved WHERE type=:type');
-			oci_bind_by_name($query, ':type', $type);
-		}
-	}
-	else
-	{
-		if($type == 'ANY')
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_unapproved WHERE zip=:zip');
-			oci_bind_by_name($query, ':zip', $zip);
-		}
-		else
-		{
-			$query = oci_parse($conn, 'SELECT ID FROM listings_unapproved WHERE type=:type AND zip=:zip');	
-			oci_bind_by_name($query, ':zip', $zip);
-			oci_bind_by_name($query, ':type', $type);
-		}
-	}
-	}
 
+	if($approved==1)
+		$table_name = 'listings_approved';
+	else
+		$table_name = 'listings_unapproved';
+
+	$query_str = 'SELECT ID FROM '.$table_name.' WHERE 1=1 '; # always true statement to easily add other conditions
+
+	if($name != 'ANY')
+	{
+		$query_str = $query_str.' AND name=\''.$name.'\'';
+	}	
+	if($description != 'ANY')
+	{
+		$query_str = $query_str.' AND description=\''.$description.'\'';
+	}	
+	if($type != 'ANY')
+	{
+		$query_str = $query_str.' AND type=\''.$type.'\'';
+	}
+	if($address != 'ANY')
+	{
+		$query_str = $query_str.' AND address=\''.$address.'\'';
+	}
+	if($country != 'ANY')
+	{
+		$query_str = $query_str.' AND country=\''.$country.'\'';
+	}
+	if($state != 'ANY')
+	{
+		$query_str = $query_str.' AND state=\''.$state.'\'';
+	}
+	if($zip != 'ANY')
+	{
+		$query_str = $query_str.' AND zip=\''.$zip.'\'';
+	}	
+	if($alum_name != 'ANY')
+	{
+		$query_str = $query_str.' AND alum_name=\''.$alum_name.'\'';
+	}	
+	if($grad_year != 'ANY')
+	{
+		$query_str = $query_str.' AND grad_year=\''.$grad_year.'\'';
+	}
+	if($major != 'ANY')
+	{
+		$query_str = $query_str.' AND major=\''.$major.'\'';
+	}
+	
+	
+	$query = oci_parse($conn, $query_str);
+	
 	oci_execute($query);
 	
-	$oci_val = OCI_BOTH;
 	$ids = NULL;
 	$nrows = oci_fetch_all($query, $ids);
-
 	oci_free_statement($query);
 	oci_close($conn);
 	return $ids;
