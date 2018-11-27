@@ -40,6 +40,9 @@ echo "
 		  <div class=\"container\">
 					 <div class=\"jumbotron\" style=\"text-align:center\">
 								<h1>Admin User Metadata View</h1>
+						<a href=\"admin.php\">Listings</a>
+						<br>
+						<a href=\"admin_userview.php\">User Metadata</a>
 					 </div>
 		  </div>
 ";
