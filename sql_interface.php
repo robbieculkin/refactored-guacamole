@@ -1,5 +1,4 @@
 <?php 
-
 # Get connection variable for further connections
 # PARAMS
 #	None
@@ -12,11 +11,9 @@ function get_conn()
 	
 	return $conn;
 }
-
 # returns all IDs
 # PARAMS
 # 	approved: 1 for approved listings, 0 for unapproved listings
-
 # TODO exception checking
 function get_ids($approved, $zip='ANY',$type='ANY')
 {
@@ -48,19 +45,16 @@ function get_ids($approved, $zip='ANY',$type='ANY')
 			oci_bind_by_name($query, ':type', $type);
 		}
 	}
-
 	oci_bind_by_name($query, ':approved', $approved);
 	oci_execute($query);
 	
 	$oci_val = OCI_BOTH;
 	$ids = NULL;
 	$nrows = oci_fetch_all($query, $ids);
-
 	oci_free_statement($query);
 	oci_close($conn);
 	return $ids;
 }
-
 # View listing by ID
 # PARAMS
 #	id: id as retrieved from get_ids()
@@ -71,16 +65,12 @@ function get_listing($id)
 	$query = oci_parse($conn, "SELECT * FROM listings WHERE ID=:id");
 	oci_bind_by_name($query, ':id', $id);
 	oci_execute($query);
-
 	$listings = NULL;
 	$nrows = oci_fetch_all($query, $listings);
-
 	oci_free_statement($query);
 	oci_close($conn);
-
 	return $listings;
 }
-
 # Insert listing into oracle database
 # Params
 #	ID: id given by system
@@ -111,16 +101,12 @@ function insert_listing($ID, $name, $description, $type, $address, $country, $st
 	oci_bind_by_name($query, ':alum_name', $alum_name);
 	oci_bind_by_name($query, ':grad_year', $grad_year);
 	$res = oci_execute($query);
-
 #	$listings = NULL;
 #	$nrows = oci_fetch_all($query, $listings);
-
 	oci_free_statement($query);
 	oci_close($conn);
-
 	return $res;
 }
-
 # Function for admin to delete listing by ID
 # PARAMS
 #	id: id of listing to be deleted
@@ -133,13 +119,10 @@ function delete_listing($id)
 	$query = oci_parse($conn, "DELETE FROM listings WHERE ID=:id");
 	oci_bind_by_name($query, ':id', $id);
 	$res = oci_execute($query);
-
 	oci_free_statement($query);
 	oci_close($conn);
-
 	return $res;
 }
-
 # Function for admin to approve listings
 # PARAMS
 #	id: id of listing to be approved
@@ -148,9 +131,49 @@ function delete_listing($id)
 function approve_listing($id)
 {
 	$conn=get_conn();
-
 	$query = oci_parse($conn, 'UPDATE listings SET approved=1 WHERE ID=:id');
 	oci_bind_by_name($query, ':id', $id);
+	$res = oci_execute($query);
+	oci_free_statement($query);
+	oci_close($conn);
+	return $res;
+}
+# Function to obtain ID for new listing
+# RETURN
+# 	id: new id
+function new_id()
+{
+	$conn=get_conn();	
+	$query = oci_parse($conn, 'SELECT MAX(id) FROM listings');
+	oci_execute($query);
+	$max_id = NULL;
+	oci_fetch_all($query, $max_id);
+	
+	oci_free_statement($query);
+	oci_close($conn);
+	$max_id = (int)$max_id["MAX(ID)"][0] + 1;
+	return $max_id;	
+}
+
+# Function to submit new user entry
+# PARAMS
+#	id: new id
+#	name: name of user
+#	grad_year: year of graduation
+#	major: user's major
+# 	reason: reason for visiting page
+# RETURN
+#	success
+function insert_user($ID, $name, $grad_year, $major, $reason)
+{
+	$conn=get_conn();
+	
+	$query = oci_parse($conn, "INSERT INTO users VALUES (:ID, :name, :grad_year, :major, :reason)");
+	oci_bind_by_name($query, ':ID', $ID);
+	oci_bind_by_name($query, ':name', $name);
+	oci_bind_by_name($query, ':grad_year', $grad_year);
+	oci_bind_by_name($query, ':major', $major);
+	oci_bind_by_name($query, ':reason', $reason);
 	$res = oci_execute($query);
 
 	oci_free_statement($query);
@@ -159,13 +182,30 @@ function approve_listing($id)
 	return $res;
 }
 
-# Function to obtain ID for new listing
+# Function to get user IDs
+
+function get_user_ids()
+{
+	$conn=get_conn();
+	
+	$query = oci_parse($conn, 'SELECT id FROM users');
+	oci_execute($query);
+	
+	$ids = NULL;
+	$nrows = oci_fetch_all($query, $ids);
+
+	oci_free_statement($query);
+	oci_close($conn);
+	return $ids;
+}
+
+# Function to obtain ID for new user
 # RETURN
-# 	id: new id
-function new_id()
+# 	id: new user id
+function new_user_id()
 {
 	$conn=get_conn();	
-	$query = oci_parse($conn, 'SELECT MAX(id) FROM listings');
+	$query = oci_parse($conn, 'SELECT MAX(id) FROM users');
 	oci_execute($query);
 
 	$max_id = NULL;
@@ -177,4 +217,24 @@ function new_id()
 	$max_id = (int)$max_id["MAX(ID)"][0] + 1;
 
 	return $max_id;	
+}
+
+# View listing by ID
+# PARAMS
+#	id: id as retrieved from get_ids()
+function get_user($id)
+{
+	$conn=get_conn();
+	
+	$query = oci_parse($conn, "SELECT * FROM users WHERE ID=:id");
+	oci_bind_by_name($query, ':id', $id);
+	oci_execute($query);
+
+	$user = NULL;
+	$nrows = oci_fetch_all($query, $user);
+
+	oci_free_statement($query);
+	oci_close($conn);
+
+	return $user;
 }
