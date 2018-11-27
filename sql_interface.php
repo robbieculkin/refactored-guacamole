@@ -139,10 +139,16 @@ function insert_listing($ID, $approved, $name, $description, $type, $address, $c
 	
 	if((int)$approved == 1)
 	{
+		if(count(get_listing($ID, 1)["ID"]) != 0) {
+			delete_listing($ID,1);
+		}
 		$query = oci_parse($conn, "INSERT INTO listings_approved VALUES (:ID, :name, :description, :type, :address, :country, :state, :zip, :alum_name, :grad_year, :major)");
 	}
 	else
 	{
+		if(count(get_listing($ID, 0)["ID"]) != 0) {
+			delete_listing($ID,0);
+		}
 		$query = oci_parse($conn, "INSERT INTO listings_unapproved VALUES (:ID, :name, :description, :type, :address, :country, :state, :zip, :alum_name, :grad_year, :major)");
 	}
 	oci_bind_by_name($query, ':ID', $ID);
@@ -173,7 +179,7 @@ function insert_listing($ID, $approved, $name, $description, $type, $address, $c
 function delete_listing($id, $approved)
 {
 	$conn=get_conn();
-	
+
 	if((int)$approved == 1)
 	{
 		$query = oci_parse($conn, "DELETE FROM listings_approved WHERE ID=:id");
@@ -201,9 +207,6 @@ function approve_listing($id)
 	$conn=get_conn();
 
 	$listing = get_listing($id, 0);
-	if(count(get_listing($id, 1)["ID"]) != 0) {
-		delete_listing($id,1);
-	}
 	$res = insert_listing((string)$listing["ID"][0], 1, (string)$listing["NAME"][0], (string)$listing["DESCRIPTION"][0], (string)$listing["TYPE"][0], (string)$listing["ADDRESS"][0], (string)$listing["COUNTRY"][0], (string)$listing["STATE"][0], (string)$listing["ZIP"][0], (string)$listing["ALUM_NAME"][0], (string)$listing["GRAD_YEAR"][0], (string)$listing["MAJOR"][0]);
 	delete_listing($id, 0);
 
@@ -240,3 +243,64 @@ function new_id()
 
 	return $max_id;	
 }
+
+function get_user_ids()
+{
+	$conn=get_conn();
+	$query = oci_parse($conn, 'SELECT id FROM users');
+	
+	oci_execute($query);
+	
+	$ids = NULL;
+	$nrows = oci_fetch_all($query, $ids);
+	oci_free_statement($query);
+	oci_close($conn);
+	return $ids;
+}
+
+function get_user($id)
+{
+	$conn=get_conn();
+	$query = oci_parse($conn, 'SELECT * FROM users WHERE id=:id');
+	oci_bind_by_name($query, ':id', $id);
+	
+	oci_execute($query);
+	
+	$user = NULL;
+	$nrows = oci_fetch_all($query, $user);
+	oci_free_statement($query);
+	oci_close($conn);
+	return $user;
+}
+
+function new_user_id()
+{
+	$conn=get_conn();
+
+	$query = oci_parse($conn, 'SELECT MAX(id) FROM users');
+	oci_execute($query);
+	$max_id_1 = NULL;
+	oci_fetch_all($query, $max_id);
+	oci_free_statement($query);
+
+	return (int)$max_id["MAX(ID)"][0] + 1;
+}
+
+function insert_user($id, $name, $grad_year, $major, $reason)
+{
+	$conn=get_conn();
+	$query = oci_parse($conn, 'INSERT INTO users VALUES(:id, :name, :grad_year, :major, :reason)');
+	oci_bind_by_name($query, ':id', $id);
+	oci_bind_by_name($query, ':name', $name);
+	oci_bind_by_name($query, ':grad_year', $grad_year);
+	oci_bind_by_name($query, ':major', $major);
+	oci_bind_by_name($query, ':reason', $reason);
+	
+	$res = oci_execute($query);
+
+	oci_free_statement($query);
+	oci_close($conn);
+
+	return $res;
+}
+

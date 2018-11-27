@@ -60,15 +60,15 @@
 
 					 if ($_SERVER["REQUEST_METHOD"]=="POST"){
 								if (isset($_POST["submit"])){
-										  $ids = get_ids(1, $_POST['zip'], $_POST['type']);
+										  $ids = get_ids(1, 'ANY', 'ANY', $_POST['type'], 'ANY', 'ANY', 'ANY', $_POST['zip'], 'ANY', 'ANY', 'ANY');
 								}
 					 } else{
-								$ids = get_ids(1, 'ANY', 'ANY');
+								$ids = get_ids(1);
 					 }
 					 
 					 foreach($ids['ID'] as $id){
 								echo "<div id=\"busn\" class=\"card w-75 mx-auto\">";
-								$listing = get_listing($id);
+								$listing = get_listing($id, 1);
 								echo "<div class=\"card-body\">";
 								echo "<h3 class=\"card-title\">".$listing['NAME'][0]."</h3>";
 								echo "<p class=\"card-text\">".$listing['DESCRIPTION'][0]."</p>";

@@ -51,15 +51,15 @@ echo "
 										  approve_listing((int)$_POST['approve']);
 								}
 								if (isset($_POST['delete'])){
-										  delete_listing((int)$_POST['delete']);
+										  delete_listing((int)$_POST['delete'], 0);
 								}
 					 }
 
-					 $ids = get_ids(0, 'ANY', 'ANY');
+					 $ids = get_ids(0);
 					 
 					 foreach($ids['ID'] as $id){
 								echo "<div id=\"busn\" class=\"card w-75 mx-auto\">";
-								$listing = get_listing($id);
+								$listing = get_listing($id, 0);
 								echo "<div class=\"card-body\">";
 								echo "<h3 class=\"card-title\">".$listing['NAME'][0]."</h3>";
 								echo "<p class=\"card-text\">".$listing['DESCRIPTION'][0]."</p>";

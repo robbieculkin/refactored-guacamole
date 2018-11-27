@@ -10,14 +10,6 @@
 		  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
-		  <?php
-					 include 'sql_interface.php';
-					 if(isset($_POST["submit"]))
-                     {
-					 	insert_listing(new_id(), $_POST["name"], $_POST["description"], $_POST["type"], $_POST["address"], $_POST["country"], $_POST["state"], $_POST["zip"], 0, $_POST["alumName"], $_POST["alumYear"]);
-					 }
-		  ?>
-
 		  <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
 		  <ul class="navbar-nav">
 					 <li class="nav-item">
@@ -40,14 +32,23 @@
 
 
 		  <!--input form-->
-		  
-		  <?php 
-		  if(isset($_POST["submit"]))
-          {
-				     echo "<h2 style='color:#3333ff;text-align:center;'> Listing submitted! </h2>";
-		  }
+		  <?php
+					 include 'sql_interface.php';
+					 if(isset($_POST["submit"]))
+                     {
+						$id = new_id();
+						if(isset($_POST["refID"])) {
+							$id = $_POST["refID"];
+						}
+					 	insert_listing($id, 0, $_POST["name"], $_POST["description"], $_POST["type"], $_POST["address"], $_POST["country"], $_POST["state"], $_POST["zip"], $_POST["alumName"], $_POST["alumYear"], $_POST["major"]);
+						echo "<h2 style='color:#3333ff;text-align:center;'> Listing submitted! Please note your ID: $id </h2>";
+					 }					
 		  ?>
 		  <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post">
+					 <div class="form-group w-75 mx-auto">
+								<label class="text-center" for="refID">(Optional) Previous Submission Reference ID</label>
+								<input name="refID" type="text" class="form-control" id="refID">
+					 </div>
 					 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="busName">Business Name</label>
 								<input name="name" type="text" class="form-control" id="busName" required>
@@ -93,13 +94,17 @@
 								<input name="zip" type="text" class="form-control" id="busZip" required>
 					 </div>
 
-                     <div class="form-group w-75 mx-auto">
+                    			 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="alumName">Alum Full Name</label>
 								<input name="alumName" type="text" class="form-control" id="alumName" required>
 					 </div>
 					 <div class="form-group w-75 mx-auto">
 								<label class="text-center" for="alumYear">Graduation Year</label>
 								<input name="alumYear" type="text" class="form-control" id="alumYear" required>
+					 </div>
+					<div class="form-group w-75 mx-auto">
+								<label class="text-center" for="major">Major</label>
+								<input name="major" type="text" class="form-control" id="major" required>
 					 </div>
 					 <div class="form-group text-center">
 								<button name="submit" type="submit" class="btn btn-primary">Submit</button>
