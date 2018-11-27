@@ -1,9 +1,12 @@
 <?php
 		  session_start();
+		  include 'sql_interface.php';
+		  
+		
 		  $username = "admin";
-		  $password = "guacamole";
+		  $password = get_pw()["PW"][0];
 					 if (isset($_POST['user']) && isset($_POST['pass'])){
-								if (($_POST['user'] == $username) && $_POST['pass'] == $password){
+								if (($_POST['user'] == $username) && hash("md5", $_POST['pass']) == $password){
 										  $_SESSION['valid'] = true;
 										  $_SESSION['timeout'] = time();
 										  $_SESSION['username'] = $username;
