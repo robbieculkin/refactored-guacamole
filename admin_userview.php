@@ -1,6 +1,8 @@
 <?php
+		  //Begin session
 		  session_start();
 
+		  //Check if logged in
 		  if(!isset($_SESSION['valid'])){
 					 header("Location:home.php");
 					 exit;
@@ -48,6 +50,7 @@ echo "
 ";
 
 
+					 //display user information in cards
 					 $ids = get_user_ids();
 					 
 					 foreach($ids['ID'] as $id){

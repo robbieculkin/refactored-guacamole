@@ -32,7 +32,7 @@
 			  </div>
 		  </nav>
 
-		  <!--Modal-->
+		  <!--Modal for user data-->
 		  <div class="modal fade" id="userData" tabindex="-1" role="dialog" aria-labelledby="userDataLabel" aria-hidden="true">
 					 <div class="modal-dialog" role="document">
 								<div class="modal-content">
@@ -72,9 +72,6 @@
 		  <div class="container">
 					 <div class="jumbotron" style="text-align:center">
 								<h1>Business Listings</h1>
-								<!--
-								<input class="form-control" type="text" placeholder="Search" aria-label="Search">
-								-->
 								<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
 										  <div class="form-group w-25 mx-auto">
 													 <label class="text-center" for="busType">Business Name</label>
@@ -129,6 +126,7 @@
 		  <?php
 					 include 'sql_interface.php';
 
+					 //Display the business information in cards
 					 if ($_SERVER["REQUEST_METHOD"]=="POST"){
 								if (isset($_POST['searchsubmit'])){
 										  		$ids = get_ids(1, $_POST['busname'], $_POST['desc'], $_POST['type'], $_POST['addr'], $_POST['country'], $_POST['state'], $_POST['zip'], 'ANY', 'ANY', 'ANY');

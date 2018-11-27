@@ -1,8 +1,10 @@
 <?php
+		  //Begin session
 		  session_start();
 		  include 'sql_interface.php';
 		  
 		
+		  //Check login and store session variables
 		  $username = "admin";
 		  $password = get_pw()["PW"][0];
 					 if (isset($_POST['user']) && isset($_POST['pass'])){
@@ -49,8 +51,7 @@
 					 </div>
 		  </div>
 
-<!--session-->
-
+		  <!--Login form-->
 		  <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
 					 <div class="form-group w-25 mx-auto">
 								<label for="username">Username</label>
